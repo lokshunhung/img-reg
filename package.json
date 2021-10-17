@@ -1,0 +1,28 @@
+{
+    "name": "img-reg",
+    "version": "0.0.1",
+    "private": true,
+    "license": "UNLICENSED",
+    "scripts": {
+        "build": "tsc",
+        "start": "fastify start dist/app.js --plugin-timeout 500000"
+    },
+    "dependencies": {
+        "aws-sdk": "2.1009.0",
+        "fastify": "3.22.0",
+        "fastify-cli": "2.13.0",
+        "fastify-env": "2.1.1",
+        "fastify-multipart": "5.0.2",
+        "fastify-plugin": "3.0.0",
+        "node-fetch": "2.6.5"
+    },
+    "devDependencies": {
+        "@types/json-schema": "7.0.9",
+        "@types/node": "16.11.1",
+        "@vnus/prettier-config": "0.0.3",
+        "prettier": "2.4.1",
+        "ts-node": "10.3.0",
+        "typescript": "4.4.4"
+    },
+    "prettier": "@vnus/prettier-config"
+}

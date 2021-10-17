@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ES2017",
+        "lib": ["ESNext"],
+        "rootDir": "src",
+        "outDir": "dist",
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "resolveJsonModule": true,
+        "sourceMap": true,
+        "removeComments": true,
+        "importsNotUsedAsValues": "error",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitOverride": true,
+        "skipLibCheck": true
+    },
+    "exclude": ["node_modules", "dist"]
+}
