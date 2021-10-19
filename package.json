@@ -15,11 +15,13 @@
         "fastify-env": "2.1.1",
         "fastify-multipart": "5.0.2",
         "fastify-plugin": "3.0.0",
-        "node-fetch": "2.6.5"
+        "node-fetch": "2.6.5",
+        "uuid": "8.3.2"
     },
     "devDependencies": {
         "@types/json-schema": "7.0.9",
         "@types/node": "16.11.1",
+        "@types/uuid": "8.3.1",
         "@vnus/prettier-config": "0.0.3",
         "prettier": "2.4.1",
         "ts-node": "10.3.0",
