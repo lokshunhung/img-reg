@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
-import * as uuid from "uuid";
-import * as path from "path";
+import path from "path";
+import { v4 } from "uuid";
 
 const validMimetypes = {
     "image/jpeg": 1,
@@ -24,10 +24,11 @@ export default async function (app: FastifyInstance, options: any) {
             }
             try {
                 const result = await app.imageService.uploadImageToS3({
-                    keyName: uuid.v4() + path.extname(data.filename),
+                    keyName: v4() + path.extname(data.filename),
                     file: data.file,
                     mimetype: data.mimetype,
                 });
+                reply.status(201);
                 return {
                     success: true,
                     imageURL: result.url,
