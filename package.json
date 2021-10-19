@@ -4,6 +4,7 @@
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
+        "dev": "tsc-watch --onSuccess \"yarn start\"",
         "build": "tsc",
         "start": "fastify start dist/app.js --plugin-timeout 500000"
     },
@@ -22,6 +23,7 @@
         "@vnus/prettier-config": "0.0.3",
         "prettier": "2.4.1",
         "ts-node": "10.3.0",
+        "tsc-watch": "4.5.0",
         "typescript": "4.4.4"
     },
     "prettier": "@vnus/prettier-config"

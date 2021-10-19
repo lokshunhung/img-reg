@@ -1,18 +1,25 @@
 version: "3.9"
 
 services:
-  # api:
-  #   build:
-  #     context: ./src
-  #   environments:
-  #     - S3_BUCKET_NAME=img-reg-bkt
-  #     - S3_ACCESS_KEY_ID=doesnt-matter
-  #     - S3_SECRET_KEY=doesnt-matter
-  #     - S3_ENDPOINT=localstack-s3:4566
-  #   ports:
-  #     - "8080:8080"
-  #   links:
-  #     - localstack-s3
+  api:
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    environment:
+      - PORT=9000
+      - NODE_TLS_REJECT_UNAUTHORIZED=0 # https://github.com/aws/aws-sdk-js/blob/e502a0f636470ec87e8cb35808d96acdda8fa304/lib/http/node.js#L156
+      - S3_BUCKET_NAME=img-reg-bkt
+      - S3_ACCESS_KEY_ID=doesnt-matter
+      - S3_SECRET_ACCESS_KEY=doesnt-matter
+      - S3_ENDPOINT=localstack-s3:4566
+    stdin_open: true
+    tty: true
+    ports:
+      - "9000:9000"
+    volumes:
+      - "./src:/app/src"
+    links:
+      - localstack-s3
 
   localstack-s3:
     image: localstack/localstack:0.12.19.1
