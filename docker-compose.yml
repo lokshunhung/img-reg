@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  # api:
+  #   build:
+  #     context: ./src
+  #   environments:
+  #     - S3_BUCKET_NAME=img-reg-bkt
+  #     - S3_ACCESS_KEY_ID=doesnt-matter
+  #     - S3_SECRET_KEY=doesnt-matter
+  #     - S3_ENDPOINT=localstack-s3:4566
+  #   ports:
+  #     - "8080:8080"
+  #   links:
+  #     - localstack-s3
+
+  localstack-s3:
+    image: localstack/localstack:0.12.19.1
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - S3_BUCKET_NAME=img-reg-bkt
+    ports:
+      - "4566:4566"
+    volumes:
+      - "./localstack/tmp:/tmp/localstack"
+      - "./localstack/init.sh:/docker-entrypoint-initaws.d/init.sh"
