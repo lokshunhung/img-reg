@@ -3,7 +3,7 @@ import fp from "fastify-plugin";
 import imageController from "./image-controller";
 import imageService from "./image-service";
 
-export default async function (app: FastifyInstance, options: any) {
+export default async function (app: FastifyInstance, options: {}) {
     app.register(fp(imageService), {
         s3: app.s3Client,
         bucketName: app.appConfig.S3_BUCKET_NAME,

@@ -15,7 +15,7 @@ async function checkS3BucketHealth(s3Client: AWS.S3, bucketName: string): Promis
     });
 }
 
-export default async function (app: FastifyInstance, options: any) {
+export default async function (app: FastifyInstance, options: {}) {
     app.route({
         method: "GET",
         url: "/health",

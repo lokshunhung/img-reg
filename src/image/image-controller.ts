@@ -7,7 +7,7 @@ const validMimetypes = {
     "image/png": 1,
 };
 
-export default async function (app: FastifyInstance, options: any) {
+export default async function (app: FastifyInstance, options: {}) {
     app.route({
         method: "POST",
         url: "/",

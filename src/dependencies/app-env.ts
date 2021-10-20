@@ -24,7 +24,7 @@ declare module "fastify" {
     }
 }
 
-export default async function (app: FastifyInstance, options: any) {
+export default async function (app: FastifyInstance, options: {}) {
     app.register(fastifyEnv, {
         confKey: "appConfig",
         dotenv: {

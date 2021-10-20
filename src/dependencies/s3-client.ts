@@ -7,7 +7,7 @@ declare module "fastify" {
     }
 }
 
-export default async function (app: FastifyInstance, options: any) {
+export default async function (app: FastifyInstance, options: {}) {
     const s3Client = new AWS.S3({
         accessKeyId: app.appConfig.S3_ACCESS_KEY_ID,
         secretAccessKey: app.appConfig.S3_SECRET_ACCESS_KEY,
