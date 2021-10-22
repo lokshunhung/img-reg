@@ -17,7 +17,7 @@ interface UploadToS3Result {
     url: string;
 }
 
-function imageService(options: Options) {
+function createImageService(options: Options) {
     return {
         uploadImageToS3: async (params: UploadToS3Params): Promise<UploadToS3Result> => {
             return await new Promise<UploadToS3Result>((resolve, reject) => {
@@ -44,10 +44,16 @@ function imageService(options: Options) {
 
 declare module "fastify" {
     interface FastifyInstance {
-        imageService: ReturnType<typeof imageService>;
+        imageService: ReturnType<typeof createImageService>;
     }
 }
 
-export default async function (app: FastifyInstance, options: Options) {
-    app.decorate("imageService", imageService(options));
+export default async function (app: FastifyInstance, options: {}) {
+    app.decorate(
+        "imageService",
+        createImageService({
+            bucketName: app.appConfig.S3_BUCKET_NAME,
+            s3: app.s3Client,
+        }),
+    );
 }
