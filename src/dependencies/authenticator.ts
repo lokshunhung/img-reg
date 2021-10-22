@@ -3,12 +3,13 @@ import { Authenticator } from "fastify-passport";
 import { Strategy as LocalStrategy } from "passport-local";
 
 interface User {
+    id: string;
     username: string;
     password: string;
 }
 
 const users: Record<string, User> = {
-    bob: { username: "bob", password: "1234" },
+    bob: { id: "1", username: "bob", password: "1234" },
 };
 
 function createAuthenticator(): Authenticator {
