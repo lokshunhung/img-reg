@@ -4,12 +4,19 @@ import type * as Schema from "json-schema";
 
 const configSchema: Schema.JSONSchema7 = {
     type: "object",
-    required: ["S3_BUCKET_NAME", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY", "S3_ENDPOINT"],
+    required: [
+        "S3_BUCKET_NAME",
+        "S3_ACCESS_KEY_ID",
+        "S3_SECRET_ACCESS_KEY",
+        "S3_ENDPOINT",
+        "SECURE_SESSION_COOKIE_KEY",
+    ],
     properties: {
         S3_BUCKET_NAME: { type: "string" },
         S3_ACCESS_KEY_ID: { type: "string" },
         S3_SECRET_ACCESS_KEY: { type: "string" },
         S3_ENDPOINT: { type: "string" },
+        SECURE_SESSION_COOKIE_KEY: { type: "string" },
     },
 };
 
@@ -20,6 +27,7 @@ declare module "fastify" {
             S3_ACCESS_KEY_ID: string;
             S3_SECRET_ACCESS_KEY: string;
             S3_ENDPOINT: string;
+            SECURE_SESSION_COOKIE_KEY: string;
         };
     }
 }
