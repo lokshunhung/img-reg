@@ -33,3 +33,29 @@ services:
     volumes:
       - "./localstack/tmp:/tmp/localstack"
       - "./localstack/init.sh:/docker-entrypoint-initaws.d/init.sh"
+
+  postgres:
+    image: postgres:14.0-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=img_reg_db
+      - POSTGRES_USER=img_reg_local
+      - POSTGRES_PASSWORD=hunter2
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./postgres/tmp:/var/lib/postgresql/data"
+
+  pgadmin:
+    image: dpage/pgadmin4:6.1
+    restart: unless-stopped
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@dev.localhost
+      - PGADMIN_DEFAULT_PASSWORD=hunter3
+    ports:
+      - "5433:80"
+    volumes:
+      - "./postgres/pgadmin/tmp:/var/lib/pgadmin"
+      - "./postgres/pgadmin-servers-init.json:/pgadmin4/servers.json"
+    links:
+      - postgres
