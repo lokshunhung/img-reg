@@ -16,5 +16,5 @@
         "noImplicitOverride": true,
         "skipLibCheck": true
     },
-    "include": ["src", "migrations", "test"]
+    "include": ["migrations", "scripts", "src", "test"]
 }

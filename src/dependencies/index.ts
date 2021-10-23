@@ -8,9 +8,12 @@ import secureSession from "./secure-session";
 
 export default fp(async function (app, options) {
     app.register(fp(appEnv));
-    app.register(fp(authenticator));
-    app.register(fp(orm));
     app.register(fp(multipart));
+
+    app.register(fp(orm));
+
     app.register(fp(s3Client));
+
     app.register(fp(secureSession));
+    app.register(fp(authenticator)); // Note: initialize after session
 });

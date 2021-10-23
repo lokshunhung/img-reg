@@ -7,11 +7,13 @@ services:
       dockerfile: src/Dockerfile
     environment:
       - PORT=9000
+      - SECURE_SESSION_COOKIE_KEY=9462c65ce20415a8d573c505eb8c89eac49f557d39191b349888f1ddf9631b36
       - NODE_TLS_REJECT_UNAUTHORIZED=0 # https://github.com/aws/aws-sdk-js/blob/e502a0f636470ec87e8cb35808d96acdda8fa304/lib/http/node.js#L156
       - POSTGRES_HOST=postgres
       - POSTGRES_DB=img_reg_db
       - POSTGRES_USER=img_reg_local
       - POSTGRES_PASSWORD=hunter2
+      - POSTGRES_PORT=5432
       - S3_BUCKET_NAME=img-reg-bkt
       - S3_ACCESS_KEY_ID=doesnt-matter
       - S3_SECRET_ACCESS_KEY=doesnt-matter

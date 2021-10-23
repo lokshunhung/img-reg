@@ -3,7 +3,10 @@ import fastifySecureSession from "fastify-secure-session";
 
 export default async function (app: FastifyInstance, options: {}) {
     app.register(fastifySecureSession, {
-        key: [app.appConfig.SECURE_SESSION_COOKIE_KEY],
+        key: [
+            // https://github.com/fastify/fastify-secure-session#using-keys-as-strings
+            Buffer.from(app.appConfig.SECURE_SESSION_COOKIE_KEY),
+        ],
         cookieName: "__Host-SID",
         cookie: {
             domain: undefined, // cookies sent to current domain, but excluding subdomains

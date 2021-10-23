@@ -19,6 +19,7 @@ export const BaseSchema = new EntitySchema<Base>({
         updatedAt: {
             type: "Date",
             nullable: false,
+            onCreate: () => new Date(),
             onUpdate: () => new Date(),
         },
     },
