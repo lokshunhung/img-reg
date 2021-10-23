@@ -2,8 +2,7 @@
     "compilerOptions": {
         "target": "ES2017",
         "lib": ["ESNext"],
-        "rootDir": "src",
-        "outDir": "dist",
+        "rootDir": ".",
         "module": "CommonJS",
         "moduleResolution": "Node",
         "resolveJsonModule": true,
@@ -17,5 +16,5 @@
         "noImplicitOverride": true,
         "skipLibCheck": true
     },
-    "include": ["src"]
+    "include": ["src", "migrations", "test"]
 }

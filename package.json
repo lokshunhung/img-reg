@@ -4,12 +4,15 @@
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
-        "db": "knex --knexfile postgres/knexfile.js",
-        "dev": "tsc-watch --onSuccess \"yarn start\"",
-        "build": "tsc",
+        "db": "mikro-orm",
+        "dev": "tsc-watch --project tsconfig.build.json --onSuccess \"yarn start\"",
+        "build": "tsc --project tsconfig.build.json",
         "start": "fastify start dist/app.js --plugin-timeout 500000"
     },
     "dependencies": {
+        "@mikro-orm/cli": "4.5.9",
+        "@mikro-orm/core": "4.5.9",
+        "@mikro-orm/postgresql": "4.5.9",
         "aws-sdk": "2.1009.0",
         "fastify": "3.22.0",
         "fastify-cli": "2.13.0",
@@ -18,10 +21,8 @@
         "fastify-passport": "0.4.3",
         "fastify-plugin": "3.0.0",
         "fastify-secure-session": "3.0.0",
-        "knex": "0.95.11",
         "node-fetch": "2.6.5",
         "passport-local": "1.0.0",
-        "pg": "8.7.1",
         "uuid": "8.3.2"
     },
     "devDependencies": {
@@ -42,5 +43,12 @@
     "prettier": "@vnus/prettier-config",
     "jest": {
         "preset": "ts-jest"
+    },
+    "mikro-orm": {
+        "configPaths": [
+            "./src/mikro-orm.config.ts",
+            "./dist/mikro-orm.config.js"
+        ],
+        "useTsNode": true
     }
 }

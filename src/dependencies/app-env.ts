@@ -1,12 +1,12 @@
 import type { FastifyInstance } from "fastify";
 import fastifyEnv from "fastify-env";
-import type * as Schema from "json-schema";
+import type { JSONSchema7 } from "json-schema";
 
-const configSchema: Schema.JSONSchema7 = {
+const configSchema: JSONSchema7 = {
     type: "object",
     required: [
         "POSTGRES_HOST",
-        "POSTGRES_DATABASE",
+        "POSTGRES_DB",
         "POSTGRES_USER",
         "POSTGRES_PASSWORD",
         "POSTGRES_PORT",
@@ -18,7 +18,7 @@ const configSchema: Schema.JSONSchema7 = {
     ],
     properties: {
         POSTGRES_HOST: { type: "string" },
-        POSTGRES_DATABASE: { type: "string" },
+        POSTGRES_DB: { type: "string" },
         POSTGRES_USER: { type: "string" },
         POSTGRES_PASSWORD: { type: "string" },
         POSTGRES_PORT: { type: "number" },
@@ -34,7 +34,7 @@ declare module "fastify" {
     interface FastifyInstance {
         appConfig: {
             POSTGRES_HOST: string;
-            POSTGRES_DATABASE: string;
+            POSTGRES_DB: string;
             POSTGRES_USER: string;
             POSTGRES_PASSWORD: string;
             POSTGRES_PORT: number;
