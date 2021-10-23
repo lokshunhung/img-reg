@@ -1,13 +1,19 @@
 import type { FastifyInstance } from "fastify";
 import path from "path";
 import { v4 } from "uuid";
+import type { ImageService } from "./image-service";
 
 const validMimetypes = {
     "image/jpeg": 1,
     "image/png": 1,
 };
 
-export default async function (app: FastifyInstance, options: {}) {
+type Options = {
+    imageService: ImageService;
+};
+
+export default async function (app: FastifyInstance, options: Options) {
+    const { imageService } = options;
     app.route({
         method: "POST",
         url: "/",
@@ -23,7 +29,7 @@ export default async function (app: FastifyInstance, options: {}) {
                 reply.code(400).send({ message: "expect jpeg, png mimetype" });
             }
             try {
-                const result = await app.imageService.uploadImageToS3({
+                const result = await imageService.uploadImageToS3({
                     keyName: v4() + path.extname(data.filename),
                     file: data.file,
                     mimetype: data.mimetype,
