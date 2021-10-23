@@ -11,6 +11,13 @@ export default async function (app: FastifyInstance, options: Options) {
         method: "GET",
         url: "/",
         handler: async (request, reply) => {
+            const postgresResult = await healthService.checkPostgresHealth();
+            if (!postgresResult.healthy) {
+                reply.status(503).send({
+                    message: "unhealthy",
+                    data: { service: "postgres", description: postgresResult.message },
+                });
+            }
             const s3Result = await healthService.checkS3BucketHealth();
             if (!s3Result.healthy) {
                 reply.status(503).send({

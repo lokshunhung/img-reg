@@ -1,3 +1,5 @@
+import type { Knex } from "@mikro-orm/postgresql";
+
 type HealthCheckResult =
     | {
           healthy: true;
@@ -9,7 +11,24 @@ type HealthCheckResult =
       };
 
 export class HealthService {
-    constructor(readonly s3Client: AWS.S3, readonly bucketName: string) {}
+    constructor(readonly s3Client: AWS.S3, readonly bucketName: string, readonly knex: Knex) {}
+
+    async checkPostgresHealth(): Promise<HealthCheckResult> {
+        const { knex } = this;
+        try {
+            const { rows } = await knex.raw(
+                `SELECT CAST(? AS TEXT) AS status
+                `,
+                ["ACK"],
+            );
+            if (rows[0].status !== "ACK") {
+                return { healthy: false, message: "NCK" };
+            }
+            return { healthy: true };
+        } catch (error) {
+            return { healthy: false, message: (error as Error).message };
+        }
+    }
 
     async checkS3BucketHealth(): Promise<HealthCheckResult> {
         const { s3Client, bucketName } = this;

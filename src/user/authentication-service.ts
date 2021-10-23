@@ -1,4 +1,4 @@
-import type { EntityRepository } from "@mikro-orm/core";
+import type { EntityRepository } from "@mikro-orm/postgresql";
 import type { User } from "../domain/user";
 import type { PasswordValidator } from "./password-validator";
 

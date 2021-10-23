@@ -1,10 +1,11 @@
 import { MikroORM, RequestContext } from "@mikro-orm/core";
+import type { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import type { FastifyInstance } from "fastify";
 import mikroORMConfig from "../mikro-orm.config";
 
 declare module "fastify" {
     interface FastifyInstance {
-        orm: MikroORM;
+        orm: MikroORM<PostgreSqlDriver>;
     }
 }
 

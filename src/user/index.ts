@@ -1,4 +1,4 @@
-import type { EntityRepository } from "@mikro-orm/core";
+import type { EntityRepository } from "@mikro-orm/postgresql";
 import type { FastifyInstance } from "fastify";
 import { UserSchema } from "../data/user.schema";
 import type { User } from "../domain/user";
