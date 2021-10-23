@@ -19,8 +19,8 @@ type Options = {
     authenticationService: AuthenticationService;
 };
 
-export default async function (app: FastifyInstance, options: {}) {
-    const { authenticationService, authenticator } = app;
+export default async function (app: FastifyInstance, options: Options) {
+    const { authenticationService, authenticator } = options;
     app.route({
         method: "POST",
         url: "/login",

@@ -1,6 +1,4 @@
-import type { EntityRepository } from "@mikro-orm/knex";
-import type { FastifyInstance } from "fastify";
-import { UserSchema } from "../data/user.schema";
+import type { EntityRepository } from "@mikro-orm/core";
 import type { User } from "../domain/user";
 import type { PasswordValidator } from "./password-validator";
 
@@ -41,16 +39,4 @@ export class AuthenticationService {
         const { password, ...userOmitPassword } = user;
         return { success: true, user: userOmitPassword };
     }
-}
-
-declare module "fastify" {
-    interface FastifyInstance {
-        authenticationService: AuthenticationService;
-    }
-}
-
-export default async function (app: FastifyInstance, options: {}) {
-    const { passwordValidator } = app;
-    const userRepository: EntityRepository<User> = app.orm.em.getRepository(UserSchema);
-    app.decorate("authenticationService", new AuthenticationService(userRepository, passwordValidator));
 }
