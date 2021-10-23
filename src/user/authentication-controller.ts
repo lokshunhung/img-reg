@@ -1,5 +1,7 @@
 import type { FastifyInstance } from "fastify";
+import type { Authenticator } from "fastify-passport";
 import type { JSONSchema7 } from "json-schema";
+import type { AuthenticationService } from "./authentication-service";
 
 const registerBodySchema: JSONSchema7 = {
     type: "object",
@@ -10,16 +12,19 @@ const registerBodySchema: JSONSchema7 = {
     },
 };
 
-interface RegisterBody {
-    username: string;
-    password: string;
-}
+type RegisterBody = { username: string; password: string };
+
+type Options = {
+    authenticator: Authenticator;
+    authenticationService: AuthenticationService;
+};
 
 export default async function (app: FastifyInstance, options: {}) {
+    const { authenticationService, authenticator } = app;
     app.route({
         method: "POST",
         url: "/login",
-        preValidation: app.authenticator.authenticate("local"),
+        preValidation: authenticator.authenticate("local"),
         handler: async (request, reply) => {
             app.log.info(`user ${request.user} login successful`);
             reply.status(200).send();
@@ -44,7 +49,7 @@ export default async function (app: FastifyInstance, options: {}) {
             body: registerBodySchema,
         },
         handler: async (request, reply) => {
-            const result = await app.authenticationService.createUser({
+            const result = await authenticationService.createUser({
                 username: request.body.username,
                 password: request.body.password,
             });

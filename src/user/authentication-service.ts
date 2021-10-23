@@ -19,49 +19,38 @@ type CreateUserResult =
           message: string;
       };
 
-type Options = {
-    userRepository: EntityRepository<User>;
-    passwordValidator: PasswordValidator;
-};
+export class AuthenticationService {
+    constructor(readonly userRepository: EntityRepository<User>, readonly passwordValidator: PasswordValidator) {}
 
-function createAuthenticationService(options: Options) {
-    const { userRepository, passwordValidator } = options;
-    return {
-        createUser: async (params: CreateUserParams): Promise<CreateUserResult> => {
-            if (!(await passwordValidator.validate(params.password))) {
-                return { success: false, message: "incorrect password format" };
-            }
-            const count = await userRepository.count({
-                username: params.username,
-            });
-            if (count !== 0) {
-                return { success: false, message: "username already exists" };
-            }
-            const user = userRepository.create({
-                username: params.username,
-                password: params.password,
-            });
-            await userRepository.persistAndFlush(user);
-            const { password, ...userOmitPassword } = user;
-            return { success: true, user: userOmitPassword };
-        },
-    };
+    async createUser(params: CreateUserParams): Promise<CreateUserResult> {
+        const { userRepository, passwordValidator } = this;
+        if (!(await passwordValidator.validate(params.password))) {
+            return { success: false, message: "incorrect password format" };
+        }
+        const count = await userRepository.count({
+            username: params.username,
+        });
+        if (count !== 0) {
+            return { success: false, message: "username already exists" };
+        }
+        const user = userRepository.create({
+            username: params.username,
+            password: params.password,
+        });
+        await userRepository.persistAndFlush(user);
+        const { password, ...userOmitPassword } = user;
+        return { success: true, user: userOmitPassword };
+    }
 }
 
 declare module "fastify" {
     interface FastifyInstance {
-        authenticationService: ReturnType<typeof createAuthenticationService>;
+        authenticationService: AuthenticationService;
     }
 }
 
 export default async function (app: FastifyInstance, options: {}) {
     const { passwordValidator } = app;
     const userRepository: EntityRepository<User> = app.orm.em.getRepository(UserSchema);
-    app.decorate(
-        "authenticationService",
-        createAuthenticationService({
-            userRepository,
-            passwordValidator,
-        }),
-    );
+    app.decorate("authenticationService", new AuthenticationService(userRepository, passwordValidator));
 }
