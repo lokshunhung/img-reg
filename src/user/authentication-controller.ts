@@ -27,7 +27,7 @@ export default async function (app: FastifyInstance, options: Options) {
         preValidation: authenticator.authenticate("local"),
         handler: async (request, reply) => {
             app.log.info(`user ${request.user} login successful`);
-            reply.status(200).send();
+            reply.code(200).send();
         },
     });
     app.route({
@@ -54,10 +54,10 @@ export default async function (app: FastifyInstance, options: Options) {
                 password: request.body.password,
             });
             if (!result.success) {
-                reply.status(409).send({ message: result.message });
+                reply.code(409).send({ message: result.message });
                 return;
             }
-            reply.status(201).send(result);
+            reply.code(201).send(result);
         },
     });
 }

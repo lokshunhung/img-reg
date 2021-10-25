@@ -34,10 +34,10 @@ export default async function (app: FastifyInstance, options: Options) {
                 mimetype: data.mimetype,
             });
             if (!result.success) {
-                reply.status(500);
+                reply.code(500);
                 return { success: false, message: result.error.message };
             }
-            reply.status(201);
+            reply.code(201);
             return { success: true, imageURL: result.url };
         },
     });
