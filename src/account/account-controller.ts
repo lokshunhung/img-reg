@@ -63,13 +63,9 @@ export default async function (app: FastifyInstance, options: Options) {
     app.route({
         method: "GET",
         url: "/account",
-        preValidation: async (request, reply) => {
-            if (!request.user) {
-                reply.code(401).send();
-            }
-        },
+        preValidation: app.preValidationAuthGuard,
         handler: async (request, reply) => {
-            return request.user;
+            return request.user!;
         },
     });
 }

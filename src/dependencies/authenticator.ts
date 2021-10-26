@@ -1,4 +1,4 @@
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest, preValidationAsyncHookHandler } from "fastify";
 import { Authenticator } from "fastify-passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { getUserRepository, UserRepository } from "../domain/repositories";
@@ -31,9 +31,16 @@ function createAuthenticator(userRepository: UserRepository, hashingService: Has
     return authenticator;
 }
 
+async function authGuard(request: FastifyRequest, reply: FastifyReply) {
+    if (!request.user) {
+        reply.code(401).send();
+    }
+}
+
 declare module "fastify" {
     interface FastifyInstance {
         authenticator: Authenticator;
+        preValidationAuthGuard: preValidationAsyncHookHandler;
     }
 
     interface PassportUser extends Omit<User, "password" | "salt"> {}
@@ -44,6 +51,7 @@ export default async function (app: FastifyInstance, options: {}) {
     const userRepository = getUserRepository(orm);
     const authenticator = createAuthenticator(userRepository, hashingService);
     app.decorate("authenticator", authenticator);
+    app.decorate("preValidationAuthGuard", authGuard);
     app.register(authenticator.initialize());
     app.register(authenticator.secureSession());
 }
