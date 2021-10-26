@@ -14,5 +14,9 @@ export const UserSchema = new EntitySchema<User, Base>({
             type: "text",
             nullable: false,
         },
+        salt: {
+            type: "text",
+            nullable: false,
+        },
     },
 });

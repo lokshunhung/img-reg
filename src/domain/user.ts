@@ -1,6 +1,7 @@
-import type { Base } from "./base";
+import { Base } from "./base";
 
-export interface User extends Base {
-    username: string;
-    password: string;
+export class User extends Base {
+    username!: string;
+    password!: string;
+    salt!: string;
 }

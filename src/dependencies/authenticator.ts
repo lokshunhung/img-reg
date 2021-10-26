@@ -1,28 +1,29 @@
+import type { EntityRepository } from "@mikro-orm/knex";
 import type { FastifyInstance } from "fastify";
 import { Authenticator } from "fastify-passport";
 import { Strategy as LocalStrategy } from "passport-local";
+import { UserSchema } from "../data/user.schema";
+import type { User } from "../domain/user";
+import type { HashingService } from "./hashing-service";
 
-interface User {
-    id: string;
-    username: string;
-    password: string;
-}
-
-const users: Record<string, User> = {
-    bob: { id: "1", username: "bob", password: "1234" },
-};
-
-function createAuthenticator(): Authenticator {
+function createAuthenticator(userRepository: EntityRepository<User>, hashingService: HashingService): Authenticator {
     const authenticator = new Authenticator();
     const localStrategy = new LocalStrategy({}, async (username, password, done) => {
-        const user = users[username];
-        if (user === undefined) return done(null, false);
-        if (user.password !== password) return done(null, false);
+        const user = await userRepository.findOne({ username });
+        if (user === null) {
+            return done(null, false);
+        }
+        const isCorrectPassword = await hashingService.checkUserPassword(user, password);
+        if (!isCorrectPassword) {
+            return done(null, false);
+        }
         return done(null, user);
     });
     authenticator.use("local", localStrategy);
     authenticator.registerUserSerializer(async (user: User, _) => user.username);
-    authenticator.registerUserDeserializer(async (serialized: string, _) => users[serialized]);
+    authenticator.registerUserDeserializer(async (serialized: string, _) => {
+        return userRepository.findOne({ username: serialized });
+    });
     return authenticator;
 }
 
@@ -33,7 +34,9 @@ declare module "fastify" {
 }
 
 export default async function (app: FastifyInstance, options: {}) {
-    const authenticator = createAuthenticator();
+    const { orm, hashingService } = app;
+    const userRepository = orm.em.getRepository(UserSchema);
+    const authenticator = createAuthenticator(userRepository, hashingService);
     app.decorate("authenticator", authenticator);
     app.register(authenticator.initialize());
     app.register(authenticator.secureSession());

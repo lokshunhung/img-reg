@@ -1,4 +1,5 @@
 import type { EntityRepository } from "@mikro-orm/postgresql";
+import type { HashingService } from "../dependencies/hashing-service";
 import type { User } from "../domain/user";
 import type { PasswordValidator } from "./password-validator";
 
@@ -10,7 +11,12 @@ type CreateUserParams = {
 type CreateUserResult =
     | {
           success: true;
-          user: Omit<User, "password">;
+          user: {
+              id: string;
+              username: string;
+              createdAt: Date;
+              updatedAt: Date;
+          };
       }
     | {
           success: false;
@@ -18,7 +24,11 @@ type CreateUserResult =
       };
 
 export class AuthenticationService {
-    constructor(readonly userRepository: EntityRepository<User>, readonly passwordValidator: PasswordValidator) {}
+    constructor(
+        readonly userRepository: EntityRepository<User>,
+        readonly passwordValidator: PasswordValidator,
+        readonly hashingService: HashingService,
+    ) {}
 
     async createUser(params: CreateUserParams): Promise<CreateUserResult> {
         const { userRepository, passwordValidator } = this;
@@ -31,12 +41,21 @@ export class AuthenticationService {
         if (count !== 0) {
             return { success: false, message: "username already exists" };
         }
+        const hashedPassword = await this.hashingService.hashPassword(params.password);
         const user = userRepository.create({
             username: params.username,
-            password: params.password,
+            password: hashedPassword.password,
+            salt: hashedPassword.salt,
         });
         await userRepository.persistAndFlush(user);
-        const { password, ...userOmitPassword } = user;
-        return { success: true, user: userOmitPassword };
+        return {
+            success: true,
+            user: {
+                id: user.id,
+                username: user.username,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+            },
+        };
     }
 }

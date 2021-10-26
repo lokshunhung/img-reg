@@ -14,6 +14,7 @@
         "@mikro-orm/core": "4.5.9",
         "@mikro-orm/postgresql": "4.5.9",
         "aws-sdk": "2.1013.0",
+        "bcrypt": "5.0.1",
         "fastify": "3.22.1",
         "fastify-cli": "2.13.0",
         "fastify-env": "2.1.1",
@@ -26,6 +27,7 @@
         "uuid": "8.3.2"
     },
     "devDependencies": {
+        "@types/bcrypt": "5.0.0",
         "@types/json-schema": "7.0.9",
         "@types/node": "16.11.4",
         "@types/node-fetch": "3.0.3",
