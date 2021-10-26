@@ -1,4 +1,4 @@
-import type { EntityRepository } from "@mikro-orm/knex";
+import type { EntityRepository } from "@mikro-orm/postgresql";
 import type { FastifyInstance } from "fastify";
 import { Authenticator } from "fastify-passport";
 import { Strategy as LocalStrategy } from "passport-local";
