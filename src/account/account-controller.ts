@@ -60,4 +60,16 @@ export default async function (app: FastifyInstance, options: Options) {
             reply.code(201).send(result.user);
         },
     });
+    app.route({
+        method: "GET",
+        url: "/account",
+        preValidation: async (request, reply) => {
+            if (!request.user) {
+                reply.code(401).send();
+            }
+        },
+        handler: async (request, reply) => {
+            return request.user;
+        },
+    });
 }

@@ -19,9 +19,9 @@ function createAuthenticator(userRepository: UserRepository, hashingService: Has
         return done(null, user);
     });
     authenticator.use("local", localStrategy);
-    authenticator.registerUserSerializer(async (user: User, _) => user.username);
+    authenticator.registerUserSerializer(async (user: User, _) => user.id);
     authenticator.registerUserDeserializer(async (serialized: string, _) => {
-        const user = await userRepository.findOne({ username: serialized }, { disableIdentityMap: true });
+        const user = await userRepository.findOne({ id: serialized }, { disableIdentityMap: true });
         if (user === null) {
             return null;
         }
