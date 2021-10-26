@@ -1,5 +1,4 @@
 import type { FastifyInstance } from "fastify";
-import healthController from "./health-controller";
 import { HealthService } from "./health-service";
 
 export default async function (app: FastifyInstance, options: {}) {
@@ -7,7 +6,7 @@ export default async function (app: FastifyInstance, options: {}) {
     const bucketName = appConfig.S3_BUCKET_NAME;
     const knex = orm.em.getKnex();
     const healthService = new HealthService(s3Client, bucketName, knex);
-    app.register(healthController, {
+    app.register(import("./health-controller"), {
         prefix: "/health",
         healthService,
     });
