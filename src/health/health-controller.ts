@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import type { HealthService } from "./health-service";
+import * as Schemas from "./schemas";
 
 type Options = {
     healthService: HealthService;
@@ -7,9 +8,10 @@ type Options = {
 
 export default async function (app: FastifyInstance, options: Options) {
     const { healthService } = options;
-    app.route({
+    app.route<Schemas.Health>({
         method: "GET",
         url: "/",
+        schema: Schemas.Health,
         handler: async (request, reply) => {
             const postgresResult = await healthService.checkPostgresHealth();
             if (!postgresResult.healthy) {
