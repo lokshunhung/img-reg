@@ -30,6 +30,8 @@ declare module "fastify" {
     interface FastifyInstance {
         authenticator: Authenticator;
     }
+
+    interface PassportUser extends User {}
 }
 
 export default async function (app: FastifyInstance, options: {}) {
