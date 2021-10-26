@@ -17,6 +17,7 @@ const validMimetypes = {
 
 const fieldsSchema: JSONSchema7 = {
     type: "object",
+    additionalProperties: false,
     required: ["image", "caption", "tags"],
     properties: {
         image: { $ref: "#/definitions/multipartFormFile" },

@@ -54,13 +54,14 @@ export class ImageService {
     }
 
     async createImageMetadata(params: CreateImageMetadataParams): Promise<CreateImageMetadataResult> {
-        const metadata = this.imageRepository.create({
+        const { imageRepository } = this;
+        const metadata = imageRepository.create({
             imageURL: params.imageURL,
             caption: params.caption,
             author: params.authorId,
             tags: params.tags,
         });
-        this.imageRepository.persist(metadata);
+        imageRepository.persist(metadata);
         return { metadata };
     }
 }

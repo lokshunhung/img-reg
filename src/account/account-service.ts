@@ -22,6 +22,21 @@ type CreateUserResult =
           message: string;
       };
 
+type ChangePasswordParams = {
+    userId: string;
+    password: string;
+    newPassword: string;
+};
+
+type ChangePasswordResult =
+    | {
+          success: true;
+      }
+    | {
+          success: false;
+          message: string;
+      };
+
 export class AccountService {
     constructor(
         readonly userRepository: UserRepository,
@@ -30,7 +45,7 @@ export class AccountService {
     ) {}
 
     async createUser(params: CreateUserParams): Promise<CreateUserResult> {
-        const { userRepository, passwordValidator } = this;
+        const { userRepository, passwordValidator, hashingService } = this;
         if (!(await passwordValidator.validate(params.password))) {
             return { success: false, message: "invalid password format" };
         }
@@ -40,7 +55,7 @@ export class AccountService {
         if (count !== 0) {
             return { success: false, message: "username already exists" };
         }
-        const hashedPassword = await this.hashingService.hashPassword(params.password);
+        const hashedPassword = await hashingService.createHashedPassword(params.password);
         const user = userRepository.create({
             username: params.username,
             password: hashedPassword.password,
@@ -56,5 +71,21 @@ export class AccountService {
                 updatedAt: user.updatedAt,
             },
         };
+    }
+
+    async changePassword(params: ChangePasswordParams): Promise<ChangePasswordResult> {
+        const { userRepository, passwordValidator, hashingService } = this;
+        const user = await userRepository.findOneOrFail({ id: params.userId });
+        const isOldPasswordCorrect = await hashingService.checkUserPassword(user, params.password);
+        if (!isOldPasswordCorrect) {
+            return { success: false, message: "incorrect old password" };
+        }
+        if (!(await passwordValidator.validate(params.newPassword))) {
+            return { success: false, message: "invalid password format" };
+        }
+        const newHashedPassword = await hashingService.createHashedPassword(params.newPassword);
+        user.password = newHashedPassword.password;
+        user.salt = newHashedPassword.salt;
+        return { success: true };
     }
 }

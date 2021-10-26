@@ -5,6 +5,7 @@ import type { AccountService } from "./account-service";
 
 const registerBodySchema: JSONSchema7 = {
     type: "object",
+    additionalProperties: false,
     required: ["username", "password"],
     properties: {
         username: { type: "string" },
@@ -13,6 +14,18 @@ const registerBodySchema: JSONSchema7 = {
 };
 
 type RegisterBody = { username: string; password: string };
+
+const changePasswordBodySchema: JSONSchema7 = {
+    type: "object",
+    additionalProperties: false,
+    required: ["password", "newPassword"],
+    properties: {
+        password: { type: "string" },
+        newPassword: { type: "string" },
+    },
+};
+
+type ChangePasswordBody = { password: string; newPassword: string };
 
 type Options = {
     authenticator: Authenticator;
@@ -54,11 +67,12 @@ export default async function (app: FastifyInstance, options: Options) {
                 password: request.body.password,
             });
             if (!result.success) {
-                reply.code(409).send({ message: result.message });
-                return;
+                reply.code(409);
+                return { success: false, message: result.message };
             }
             await app.orm.em.flush();
-            reply.code(201).send(result.user);
+            reply.code(201);
+            return { success: true, user: result.user };
         },
     });
     app.route({
@@ -67,6 +81,29 @@ export default async function (app: FastifyInstance, options: Options) {
         preValidation: app.preValidationAuthGuard,
         handler: async (request, reply) => {
             return request.user!;
+        },
+    });
+    app.route<{
+        Body: ChangePasswordBody;
+    }>({
+        method: "POST",
+        url: "/account/password",
+        schema: {
+            body: changePasswordBodySchema,
+        },
+        preValidation: app.preValidationAuthGuard,
+        handler: async (request, reply) => {
+            const result = await accountService.changePassword({
+                userId: request.user!.id,
+                password: request.body.password,
+                newPassword: request.body.newPassword,
+            });
+            if (!result.success) {
+                reply.code(400);
+                return { success: false, message: result.message };
+            }
+            await app.orm.em.flush();
+            return { success: true };
         },
     });
 }

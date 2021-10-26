@@ -3,7 +3,7 @@ import type { FastifyInstance } from "fastify";
 import type { User } from "../domain/user";
 
 export class HashingService {
-    async hashPassword(plainTextPassword: string): Promise<{ password: string; salt: string }> {
+    async createHashedPassword(plainTextPassword: string): Promise<{ password: string; salt: string }> {
         const salt = await genSalt();
         const password = await hash(plainTextPassword, salt);
         return { password, salt };
