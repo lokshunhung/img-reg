@@ -3,6 +3,7 @@ import path from "path";
 import { v4 } from "uuid";
 import type { ImageService } from "./image-service";
 import { validateMultipartData } from "./multipart-validator";
+import * as Schemas from "./schemas";
 
 type Options = {
     imageService: ImageService;
@@ -10,9 +11,10 @@ type Options = {
 
 export default async function (app: FastifyInstance, options: Options) {
     const { imageService } = options;
-    app.route({
+    app.route<Schemas.Upload>({
         method: "POST",
         url: "/",
+        schema: Schemas.Upload,
         preValidation: app.preValidationAuthGuard,
         handler: async (request, reply) => {
             request.headers["content-type"];
