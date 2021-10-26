@@ -5,7 +5,7 @@ export default async function (app: FastifyInstance, options: {}) {
     app.register(fastifySecureSession, {
         key: [
             // https://github.com/fastify/fastify-secure-session#using-keys-as-strings
-            Buffer.from(app.appConfig.SECURE_SESSION_COOKIE_KEY),
+            Buffer.from(app.appConfig.SECURE_SESSION_COOKIE_KEY, "hex"),
         ],
         cookieName: "__Host-SID",
         cookie: {

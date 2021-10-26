@@ -57,7 +57,7 @@ export default async function (app: FastifyInstance, options: Options) {
                 reply.code(409).send({ message: result.message });
                 return;
             }
-            reply.code(201).send(result);
+            reply.code(201).send(result.user);
         },
     });
 }
