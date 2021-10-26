@@ -6,6 +6,7 @@ import multipart from "./multipart";
 import orm from "./orm";
 import s3Client from "./s3-client";
 import secureSession from "./secure-session";
+import swagger from "./swagger";
 
 export default fp(async function (app, options) {
     app.register(fp(appEnv));
@@ -18,4 +19,6 @@ export default fp(async function (app, options) {
     app.register(fp(hashingService));
     app.register(fp(secureSession));
     app.register(fp(authenticator)); // Note: initialize after session
+
+    app.register(fp(swagger));
 });

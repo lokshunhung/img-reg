@@ -23,6 +23,7 @@
         "fastify-passport": "0.4.3",
         "fastify-plugin": "3.0.0",
         "fastify-secure-session": "3.0.0",
+        "fastify-swagger": "4.12.5",
         "node-fetch": "2.6.5",
         "passport-local": "1.0.0",
         "uuid": "8.3.2"
