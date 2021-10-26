@@ -30,7 +30,7 @@
         "@types/bcrypt": "5.0.0",
         "@types/json-schema": "7.0.9",
         "@types/node": "16.11.4",
-        "@types/node-fetch": "3.0.3",
+        "@types/node-fetch": "2.5.12",
         "@types/passport-local": "1.0.34",
         "@types/uuid": "8.3.1",
         "@vnus/prettier-config": "0.0.3",

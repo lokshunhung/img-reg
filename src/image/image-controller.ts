@@ -2,11 +2,7 @@ import type { FastifyInstance } from "fastify";
 import path from "path";
 import { v4 } from "uuid";
 import type { ImageService } from "./image-service";
-
-const validMimetypes = {
-    "image/jpeg": 1,
-    "image/png": 1,
-};
+import { validateMultipartData } from "./multipart-validator";
 
 type Options = {
     imageService: ImageService;
@@ -17,28 +13,40 @@ export default async function (app: FastifyInstance, options: Options) {
     app.route({
         method: "POST",
         url: "/",
-        onRequest: async (request, reply) => {
-            if (!request.headers["content-type"]?.startsWith("multipart/")) {
-                reply.code(400).send({ success: false, message: "expect multipart request" });
-            }
-        },
+        preValidation: app.preValidationAuthGuard,
         handler: async (request, reply) => {
-            const data = await request.file();
-            console.log("file" in data);
-            if (!(data.mimetype in validMimetypes)) {
-                reply.code(400).send({ success: false, message: "expect jpeg, png mimetype" });
+            const validationResult = await validateMultipartData(request);
+            if (!validationResult.success) {
+                reply.code(400);
+                return { success: false, message: validationResult.message };
             }
+            const { fields } = validationResult;
             const result = await imageService.uploadImageToS3({
-                keyName: v4() + path.extname(data.filename),
-                file: data.file,
-                mimetype: data.mimetype,
+                keyName: v4() + path.extname(fields.image.filename),
+                file: fields.image.file,
+                mimetype: fields.image.mimetype,
             });
             if (!result.success) {
                 reply.code(500);
                 return { success: false, message: result.error.message };
             }
+            const { metadata } = await imageService.createImageMetadata({
+                imageURL: result.url,
+                caption: fields.caption.value,
+                tags: fields.tags.map((field) => field.value),
+                authorId: request.user?.id || "f2288faf-67b1-4c16-8cbc-e4aa5bfef9a2",
+            });
+            await app.orm.em.flush();
             reply.code(201);
-            return { success: true, imageURL: result.url };
+            return {
+                success: true,
+                image: {
+                    id: metadata.id,
+                    imageURL: metadata.imageURL,
+                    caption: metadata.caption,
+                    tags: metadata.tags,
+                },
+            };
         },
     });
 }

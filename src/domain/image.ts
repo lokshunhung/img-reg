@@ -5,5 +5,5 @@ export class Image extends Base {
     imageURL!: string;
     caption!: string;
     author!: User;
-    tag!: Array<string>;
+    tags!: Array<string>;
 }

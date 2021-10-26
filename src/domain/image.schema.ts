@@ -19,7 +19,7 @@ export const ImageSchema = new EntitySchema<Image, Base>({
             entity: "User",
             inversedBy: "images",
         },
-        tag: {
+        tags: {
             type: "string[]",
             nullable: true,
         },

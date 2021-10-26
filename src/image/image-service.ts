@@ -1,5 +1,7 @@
 import type * as AWS from "aws-sdk";
 import type { Readable } from "stream";
+import type { Image } from "../domain/image";
+import type { ImageRepository } from "../domain/repositories";
 
 type UploadToS3Params = {
     file: Readable;
@@ -17,8 +19,19 @@ type UploadToS3Result =
           error: Error;
       };
 
+type CreateImageMetadataParams = {
+    imageURL: string;
+    caption: string;
+    authorId: string;
+    tags: Array<string>;
+};
+
+type CreateImageMetadataResult = {
+    metadata: Omit<Image, "author">;
+};
+
 export class ImageService {
-    constructor(readonly s3Client: AWS.S3, readonly bucketName: string) {}
+    constructor(readonly s3Client: AWS.S3, readonly bucketName: string, readonly imageRepository: ImageRepository) {}
 
     async uploadImageToS3(params: UploadToS3Params): Promise<UploadToS3Result> {
         const { s3Client, bucketName } = this;
@@ -38,5 +51,16 @@ export class ImageService {
                 }
             });
         });
+    }
+
+    async createImageMetadata(params: CreateImageMetadataParams): Promise<CreateImageMetadataResult> {
+        const metadata = this.imageRepository.create({
+            imageURL: params.imageURL,
+            caption: params.caption,
+            author: params.authorId,
+            tags: params.tags,
+        });
+        this.imageRepository.persist(metadata);
+        return { metadata };
     }
 }
