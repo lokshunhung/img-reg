@@ -21,7 +21,12 @@ function createAuthenticator(userRepository: UserRepository, hashingService: Has
     authenticator.use("local", localStrategy);
     authenticator.registerUserSerializer(async (user: User, _) => user.username);
     authenticator.registerUserDeserializer(async (serialized: string, _) => {
-        return userRepository.findOne({ username: serialized });
+        const user = await userRepository.findOne({ username: serialized }, { disableIdentityMap: true });
+        if (user === null) {
+            return null;
+        }
+        const { password, salt, ...userOmitPassword } = user;
+        return userOmitPassword;
     });
     return authenticator;
 }
@@ -31,7 +36,7 @@ declare module "fastify" {
         authenticator: Authenticator;
     }
 
-    interface PassportUser extends User {}
+    interface PassportUser extends Omit<User, "password" | "salt"> {}
 }
 
 export default async function (app: FastifyInstance, options: {}) {
