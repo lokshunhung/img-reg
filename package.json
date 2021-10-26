@@ -12,6 +12,7 @@
     "dependencies": {
         "@mikro-orm/cli": "4.5.9",
         "@mikro-orm/core": "4.5.9",
+        "@mikro-orm/migrations": "4.5.9",
         "@mikro-orm/postgresql": "4.5.9",
         "aws-sdk": "2.1014.0",
         "bcrypt": "5.0.1",

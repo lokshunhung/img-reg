@@ -806,7 +806,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikro-orm/migrations@npm:^4.5.9":
+"@mikro-orm/migrations@npm:4.5.9, @mikro-orm/migrations@npm:^4.5.9":
   version: 4.5.9
   resolution: "@mikro-orm/migrations@npm:4.5.9"
   dependencies:
@@ -3798,6 +3798,7 @@ __metadata:
   dependencies:
     "@mikro-orm/cli": 4.5.9
     "@mikro-orm/core": 4.5.9
+    "@mikro-orm/migrations": 4.5.9
     "@mikro-orm/postgresql": 4.5.9
     "@types/bcrypt": 5.0.0
     "@types/json-schema": 7.0.9
