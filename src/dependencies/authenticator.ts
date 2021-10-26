@@ -2,8 +2,8 @@ import type { EntityRepository } from "@mikro-orm/knex";
 import type { FastifyInstance } from "fastify";
 import { Authenticator } from "fastify-passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { UserSchema } from "../data/user.schema";
 import type { User } from "../domain/user";
+import { UserSchema } from "../domain/user.schema";
 import type { HashingService } from "./hashing-service";
 
 function createAuthenticator(userRepository: EntityRepository<User>, hashingService: HashingService): Authenticator {

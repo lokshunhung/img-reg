@@ -1,7 +1,7 @@
 import type { EntityRepository } from "@mikro-orm/postgresql";
 import type { FastifyInstance } from "fastify";
-import { UserSchema } from "../data/user.schema";
 import type { User } from "../domain/user";
+import { UserSchema } from "../domain/user.schema";
 import { AuthenticationService } from "./authentication-service";
 import { PasswordValidator } from "./password-validator";
 

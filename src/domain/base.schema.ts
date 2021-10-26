@@ -1,6 +1,6 @@
 import { EntitySchema } from "@mikro-orm/core";
 import { v4 } from "uuid";
-import type { Base } from "../domain/base";
+import type { Base } from "./base";
 
 export const BaseSchema = new EntitySchema<Base>({
     abstract: true,

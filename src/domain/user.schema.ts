@@ -1,6 +1,6 @@
 import { EntitySchema } from "@mikro-orm/core";
-import type { Base } from "../domain/base";
-import type { User } from "../domain/user";
+import type { Base } from "./base";
+import type { User } from "./user";
 
 export const UserSchema = new EntitySchema<User, Base>({
     name: "User",
