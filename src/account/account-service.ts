@@ -1,6 +1,5 @@
-import type { EntityRepository } from "@mikro-orm/postgresql";
 import type { HashingService } from "../dependencies/hashing-service";
-import type { User } from "../domain/user";
+import type { UserRepository } from "../domain/repositories";
 import type { PasswordValidator } from "./password-validator";
 
 type CreateUserParams = {
@@ -25,7 +24,7 @@ type CreateUserResult =
 
 export class AccountService {
     constructor(
-        readonly userRepository: EntityRepository<User>,
+        readonly userRepository: UserRepository,
         readonly passwordValidator: PasswordValidator,
         readonly hashingService: HashingService,
     ) {}

@@ -1,12 +1,11 @@
-import type { EntityRepository } from "@mikro-orm/postgresql";
 import type { FastifyInstance } from "fastify";
 import { Authenticator } from "fastify-passport";
 import { Strategy as LocalStrategy } from "passport-local";
+import { getUserRepository, UserRepository } from "../domain/repositories";
 import type { User } from "../domain/user";
-import { UserSchema } from "../domain/user.schema";
 import type { HashingService } from "./hashing-service";
 
-function createAuthenticator(userRepository: EntityRepository<User>, hashingService: HashingService): Authenticator {
+function createAuthenticator(userRepository: UserRepository, hashingService: HashingService): Authenticator {
     const authenticator = new Authenticator();
     const localStrategy = new LocalStrategy({}, async (username, password, done) => {
         const user = await userRepository.findOne({ username });
@@ -35,7 +34,7 @@ declare module "fastify" {
 
 export default async function (app: FastifyInstance, options: {}) {
     const { orm, hashingService } = app;
-    const userRepository = orm.em.getRepository(UserSchema);
+    const userRepository = getUserRepository(orm);
     const authenticator = createAuthenticator(userRepository, hashingService);
     app.decorate("authenticator", authenticator);
     app.register(authenticator.initialize());

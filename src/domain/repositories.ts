@@ -3,6 +3,8 @@ import type { EntityRepository } from "@mikro-orm/postgresql";
 import type { User } from "./user";
 import { UserSchema } from "./user.schema";
 
-export function getUserRepository(orm: MikroORM): EntityRepository<User> {
+export type UserRepository = EntityRepository<User>;
+
+export function getUserRepository(orm: MikroORM): UserRepository {
     return orm.em.getRepository(UserSchema);
 }
