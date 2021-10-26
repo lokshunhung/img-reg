@@ -46,7 +46,7 @@ export class AccountService {
             password: hashedPassword.password,
             salt: hashedPassword.salt,
         });
-        await userRepository.persistAndFlush(user);
+        userRepository.persist(user);
         return {
             success: true,
             user: {
