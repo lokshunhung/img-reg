@@ -23,7 +23,7 @@ type CreateUserResult =
           message: string;
       };
 
-export class AuthenticationService {
+export class AccountService {
     constructor(
         readonly userRepository: EntityRepository<User>,
         readonly passwordValidator: PasswordValidator,
