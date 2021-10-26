@@ -10,9 +10,10 @@ type Options = {
 
 export default async function (app: FastifyInstance, options: Options) {
     const { accountService, authenticator } = options;
-    app.route({
+    app.route<Schemas.Login>({
         method: "POST",
         url: "/login",
+        schema: Schemas.Login,
         preValidation: authenticator.authenticate("local"),
         handler: async (request, reply) => {
             app.log.info(`user ${request.user} login successful`);

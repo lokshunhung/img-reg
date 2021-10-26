@@ -1,6 +1,17 @@
 import { Type } from "@sinclair/typebox";
 import { RouteSchema } from "../utils";
 
+export type Login = RouteSchema<typeof Login>;
+export const Login = new RouteSchema({
+    body: Type.Object(
+        {
+            username: Type.String(),
+            password: Type.String(),
+        },
+        { additionalProperties: false },
+    ),
+});
+
 export type Register = RouteSchema<typeof Register>;
 export const Register = new RouteSchema({
     body: Type.Object(
