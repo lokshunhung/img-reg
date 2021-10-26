@@ -1,31 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import type { Authenticator } from "fastify-passport";
-import type { JSONSchema7 } from "json-schema";
 import type { AccountService } from "./account-service";
-
-const registerBodySchema: JSONSchema7 = {
-    type: "object",
-    additionalProperties: false,
-    required: ["username", "password"],
-    properties: {
-        username: { type: "string" },
-        password: { type: "string" },
-    },
-};
-
-type RegisterBody = { username: string; password: string };
-
-const changePasswordBodySchema: JSONSchema7 = {
-    type: "object",
-    additionalProperties: false,
-    required: ["password", "newPassword"],
-    properties: {
-        password: { type: "string" },
-        newPassword: { type: "string" },
-    },
-};
-
-type ChangePasswordBody = { password: string; newPassword: string };
+import * as Schemas from "./schemas";
 
 type Options = {
     authenticator: Authenticator;
@@ -53,14 +29,10 @@ export default async function (app: FastifyInstance, options: Options) {
             reply.redirect("/");
         },
     });
-    app.route<{
-        Body: RegisterBody;
-    }>({
+    app.route<Schemas.Register>({
         method: "POST",
         url: "/register",
-        schema: {
-            body: registerBodySchema,
-        },
+        schema: Schemas.Register,
         handler: async (request, reply) => {
             const result = await accountService.createUser({
                 username: request.body.username,
@@ -83,14 +55,10 @@ export default async function (app: FastifyInstance, options: Options) {
             return request.user!;
         },
     });
-    app.route<{
-        Body: ChangePasswordBody;
-    }>({
+    app.route<Schemas.ChangePassword>({
         method: "POST",
         url: "/account/password",
-        schema: {
-            body: changePasswordBodySchema,
-        },
+        schema: Schemas.ChangePassword,
         preValidation: app.preValidationAuthGuard,
         handler: async (request, reply) => {
             const result = await accountService.changePassword({

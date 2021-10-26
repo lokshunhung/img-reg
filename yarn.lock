@@ -880,6 +880,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sinclair/typebox@npm:0.20.5":
+  version: 0.20.5
+  resolution: "@sinclair/typebox@npm:0.20.5"
+  checksum: 774160187966b0c7b2c9aab2fc4c443cc72820fa6808211d719d9b00d8272d6183668a6de73ad21ddbb2339b3012d5c0a79a8cc3ae87b578501187b4f39fd339
+  languageName: node
+  linkType: hard
+
 "@sinonjs/commons@npm:^1.7.0":
   version: 1.8.3
   resolution: "@sinonjs/commons@npm:1.8.3"
@@ -3906,6 +3913,7 @@ __metadata:
     "@mikro-orm/core": 4.5.9
     "@mikro-orm/migrations": 4.5.9
     "@mikro-orm/postgresql": 4.5.9
+    "@sinclair/typebox": 0.20.5
     "@types/bcrypt": 5.0.0
     "@types/json-schema": 7.0.9
     "@types/node": 16.11.6
