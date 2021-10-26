@@ -18,5 +18,10 @@ export const UserSchema = new EntitySchema<User, Base>({
             type: "text",
             nullable: false,
         },
+        images: {
+            reference: "1:m",
+            entity: "Image",
+            eager: false,
+        },
     },
 });

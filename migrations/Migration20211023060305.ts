@@ -9,7 +9,8 @@ export class Migration20211023060305 extends Migration {
                 "updated_at" timestamptz(0) not null,
                 "username" text not null,
                 "password" text not null
-            );`);
+            );
+        `);
         this.addSql(`
             alter table "user"
             add constraint "user_pkey" primary key ("id");
