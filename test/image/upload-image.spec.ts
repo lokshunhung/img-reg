@@ -30,7 +30,12 @@ describe("image", () => {
         expect(await response.json()).toStrictEqual(
             expect.objectContaining({
                 success: true,
-                imageURL: expect.any(String),
+                data: expect.objectContaining({
+                    id: expect.any(String),
+                    imageURL: expect.any(String),
+                    caption: expect.any(String),
+                    tags: expect.any(Array),
+                }),
             }),
         );
     });

@@ -32,7 +32,7 @@ export class AccountService {
     async createUser(params: CreateUserParams): Promise<CreateUserResult> {
         const { userRepository, passwordValidator } = this;
         if (!(await passwordValidator.validate(params.password))) {
-            return { success: false, message: "incorrect password format" };
+            return { success: false, message: "invalid password format" };
         }
         const count = await userRepository.count({
             username: params.username,

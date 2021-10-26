@@ -1,5 +1,6 @@
 import Ajv from "ajv";
 import type { MultipartFile } from "fastify-multipart";
+import type { IncomingHttpHeaders } from "http";
 import type { JSONSchema7 } from "json-schema";
 
 type MultipartField = {
@@ -16,6 +17,7 @@ const validMimetypes = {
 
 const fieldsSchema: JSONSchema7 = {
     type: "object",
+    required: ["image", "caption", "tags"],
     properties: {
         image: { $ref: "#/definitions/multipartFormFile" },
         caption: { $ref: "#/definitions/multipartFormField" },
@@ -56,6 +58,7 @@ const ajv = new Ajv();
 const validateMultipartFields = ajv.compile(fieldsSchema);
 
 type Params = {
+    headers: IncomingHttpHeaders;
     isMultipart: () => boolean;
     file: () => Promise<MultipartFile>;
 };
@@ -68,21 +71,25 @@ type Result =
     | {
           success: false;
           message: string;
+          context: any;
       };
 
 export async function validateMultipartData(request: Params): Promise<Result> {
     // request.isMultipart only works after Parsing lifecycle (https://www.fastify.io/docs/latest/Lifecycle/)
     // ref: https://github.com/fastify/fastify-multipart/blob/40d0d64c3928720d939afe0c5ac64a030c81c892/index.js#L173
     if (!request.isMultipart()) {
-        return { success: false, message: "expect multipart form request" };
+        const context = { contentType: request.headers["content-type"] };
+        return { success: false, message: "expect multipart form request", context };
     }
     const data = await request.file();
     if (!(data.mimetype in validMimetypes)) {
-        return { success: false, message: "expect jpeg, png mimetype" };
+        const context = { mimeType: data.mimetype };
+        return { success: false, message: "expect jpeg, png mimetype", context };
     }
-    const isValid = await validateMultipartFields(data.fields);
+    const isValid = validateMultipartFields(data.fields);
     if (!isValid) {
-        return { success: false, message: "unexpected multipart fields" };
+        const context = { validationErrors: validateMultipartFields.errors };
+        return { success: false, message: "unexpected multipart fields", context };
     }
     return { success: true, fields: data.fields as any };
 }

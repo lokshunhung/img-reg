@@ -15,8 +15,14 @@ export default async function (app: FastifyInstance, options: Options) {
         url: "/",
         preValidation: app.preValidationAuthGuard,
         handler: async (request, reply) => {
+            request.headers["content-type"];
             const validationResult = await validateMultipartData(request);
             if (!validationResult.success) {
+                app.log.warn({
+                    context: "image/upload",
+                    message: "input validation failure",
+                    data: validationResult.context,
+                });
                 reply.code(400);
                 return { success: false, message: validationResult.message };
             }
@@ -27,20 +33,25 @@ export default async function (app: FastifyInstance, options: Options) {
                 mimetype: fields.image.mimetype,
             });
             if (!result.success) {
-                reply.code(500);
-                return { success: false, message: result.error.message };
+                app.log.error({
+                    context: "image/upload",
+                    message: "upload s3 failure",
+                    data: result.error,
+                });
+                reply.code(503);
+                return { success: false, message: "service unavailable" };
             }
             const { metadata } = await imageService.createImageMetadata({
                 imageURL: result.url,
                 caption: fields.caption.value,
                 tags: fields.tags.map((field) => field.value),
-                authorId: request.user?.id || "f2288faf-67b1-4c16-8cbc-e4aa5bfef9a2",
+                authorId: request.user!.id,
             });
             await app.orm.em.flush();
             reply.code(201);
             return {
                 success: true,
-                image: {
+                data: {
                     id: metadata.id,
                     imageURL: metadata.imageURL,
                     caption: metadata.caption,
