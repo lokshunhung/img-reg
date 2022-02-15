@@ -20,7 +20,7 @@
         "fastify": "3.22.1",
         "fastify-cli": "2.13.0",
         "fastify-env": "2.1.1",
-        "fastify-multipart": "5.0.2",
+        "fastify-multipart": "5.3.1",
         "fastify-passport": "0.4.3",
         "fastify-plugin": "3.0.0",
         "fastify-secure-session": "3.0.0",
